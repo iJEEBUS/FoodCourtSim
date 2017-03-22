@@ -10,47 +10,34 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * The entire GUI class that is to be called in order to run the 
+ * FoodCourtSim simulation.
+ * 
+ * @author Ronald Rounsifer
+ * @version 3.21.2017
+ */
 public class GUI {
 	
 	/** JFrame that is to be used for the GUI */
 	JFrame frame;
 	
-	/** JPanel that is to be used for the GUI */
-	Pane pane;
-	
-	
-	/** Labels that are to be used for the GUI */
-	JLabel line_lbl;
-	JLabel input_lbl;
-	JLabel next_person_lbl;
-	JLabel avg_sec_cashier_lbl;
-	JLabel total_time_lbl;
-	JLabel avg_sec_eatery_lbl;
-	JLabel person_leaves_lbl;
-	JLabel num_eateries_lbl;
-	JLabel output_info_lbl;
-	JLabel throughput_lbl;
-	JLabel avg_time_lbl;
-	JLabel num_ppl_left_lbl;
-	JLabel max_queue_lbl;
-	
-	/** Buttons that are to be used for the GUI */
-	JButton start_sim_btn;
-	JButton quit_sim_btn;
-	
+	/**
+	 * Constructor for the GUI class
+	 */
 	public GUI() {
-		
 		frame = new JFrame();
-		pane = new Pane();
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(pane);
+		frame.add(new Pane());
 		frame.pack();
 		frame.setLocation(800, 100);
 		frame.setVisible(true);
-		
 	}
 	
+	/**
+	 * Creates and runs a new instance of the GUI class
+	 */
 	public static void main(String[] args) {
 		GUI gui = new GUI();
 	}

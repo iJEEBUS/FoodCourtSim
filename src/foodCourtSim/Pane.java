@@ -16,7 +16,7 @@ import javax.swing.JTextField;
  * The main JPanel that is to be used by the GUI class.
  * No logic is handled here besides button clicks.
  * 
- * @author Ron
+ * @author Ronald Rounsifer
  * @version 3.21.2017
  */
 public class Pane extends JPanel {
