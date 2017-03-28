@@ -28,4 +28,11 @@ public class CheckOutQ {
 	public int maxQ() {
 		return maxQ;
 	}
+	
+	public Person get(int index) {
+		if(q.size() == 0)
+			return null;
+		
+		return q.get(index);
+	}
 }

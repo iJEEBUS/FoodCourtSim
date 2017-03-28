@@ -9,6 +9,7 @@ public class Eatery implements ClockListener {
 	private Person person;   // this is the person at the Eatery. 
 	private int completed = 0;
 	private CheckOutQ checkOut;
+	private int leftLine = 0;
 	
 	public Eatery(CheckOutQ q) {
 		checkOut = q;
@@ -23,6 +24,12 @@ public class Eatery implements ClockListener {
 	
 	public void event (int tick){
 		if (tick >= timeOfNextEvent) {
+			
+			if((Q.size() != 0) && (Q.get(0).getTickTime() >= Q.get(0).getLeaveTime())) {
+				Q.remove(0);
+				leftLine++;
+			}
+			
 			if (person != null) { 			// Notice the delay that takes place here
 				checkOut.add(person);    // take this person to the next station. 
 			person = null;				// I have send the person on. 
@@ -35,6 +42,10 @@ public class Eatery implements ClockListener {
 				completed++;
 			}	
 		}
+	}
+	
+	public int getLeftLine() {
+		return leftLine;
 	}
 	
 	public int getLeft() {

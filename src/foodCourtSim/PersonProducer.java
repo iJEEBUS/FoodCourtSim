@@ -15,14 +15,12 @@ public class PersonProducer implements ClockListener {
 	private int averageCheckOutTime;
 	private int totalAverageTime = 0;
 	private int numPeople = 0;
+	private int averageLeaveTime;
 
 	private Random r = new Random();
 
-	public PersonProducer(Eatery[] eatery,
-			CheckOut[] checkout,
-			int numOfTicksNextPerson, 
-			int averageEateryTime, 
-			int averageCheckOutTime) {
+	public PersonProducer(Eatery[] eatery, CheckOut[] checkout, int numOfTicksNextPerson, 
+			int averageEateryTime, int averageCheckOutTime, int leaveTime) {
 		
 		this.eatery = new Eatery[eatery.length];
 		this.checkout = new CheckOut[checkout.length];
@@ -36,6 +34,7 @@ public class PersonProducer implements ClockListener {
 		this.numOfTicksNextPerson = numOfTicksNextPerson;
 		this.averageEateryTime = averageEateryTime;
 		this.averageCheckOutTime = averageCheckOutTime;
+		this.averageLeaveTime = leaveTime;
 		//r.setSeed(13);    // This will cause the same random number
 	}
 	
@@ -55,21 +54,21 @@ public class PersonProducer implements ClockListener {
 
 			int eatTime = (int) Math.max(0,averageEateryTime*0.5*r.nextGaussian() + averageEateryTime +.5);
 			int checkTime = (int) Math.max(0,averageCheckOutTime*0.5*r.nextGaussian() + averageCheckOutTime +.5);
+			int leaveTime = (int) Math.max(0,averageLeaveTime*0.5*r.nextGaussian() + averageLeaveTime +.5);
 			
 			Person person;
 
 			int rNumber = (int)(Math.random() * 100);
 
 			if(rNumber < 10)
-				person = new SpecialNeedsPerson(tick, eatTime, checkTime);
+				person = new SpecialNeedsPerson(tick, eatTime, checkTime, leaveTime);
 			else if(rNumber < 30)
-				person = new LimitedTimePerson(tick, eatTime, checkTime);
+				person = new LimitedTimePerson(tick, eatTime, checkTime, leaveTime);
 			else
-				person = new RegularPerson(tick, eatTime, checkTime);
+				person = new RegularPerson(tick, eatTime, checkTime, leaveTime);
 			
 			
 			eatery[(int)(Math.random()*eatery.length)].add(person);	//assigns person to a random eatery
-			totalAverageTime = totalAverageTime + person.getTotalTime();
 			numPeople++;
 		}
 	}

@@ -25,7 +25,7 @@ public class Sim {
 			clk.add(checkoutList[c]);
 		}
 
-		PersonProducer produce = new PersonProducer(eateryList, checkoutList, 20, 60, 10);	
+		PersonProducer produce = new PersonProducer(eateryList, checkoutList, 20, 60, 10, 900);	
 		clk.add(produce);
 
 		clk.run(10000);
@@ -34,13 +34,16 @@ public class Sim {
 		int throughPut = 0;
 		int numPeople = produce.getNumPeople();
 		int avgTime = 0;
+		int leftLine = 0;
 		
 		for(int i = 0; i < numEateries; i++) {
 			peopleInLine = peopleInLine + eateryList[i].getLeft();
+			leftLine += eateryList[i].getLeftLine();
 		}
 		for(int j = 0; j < numCheckOuts; j++) {
 			throughPut = throughPut + checkoutList[j].getThroughPut();
 			avgTime = avgTime + checkoutList[j].averageTotalTime();
+			leftLine += checkoutList[j].getLeftLine();
 		}
 		
 		avgTime = avgTime/numCheckOuts;
@@ -49,5 +52,6 @@ public class Sim {
 		System.out.println("Average time for one person is " + avgTime);
 		System.out.println("There are " + peopleInLine + " in line still");
 		System.out.println("Max Q cashier line " + q.maxQ());
+		System.out.println(leftLine + " people left the line");
 	}
 }

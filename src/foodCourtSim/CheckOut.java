@@ -8,6 +8,7 @@ public class CheckOut implements ClockListener {
 	private int totalTime = 0;
 	private int numPeople = 0;
 	private CheckOutQ Q;
+	private int leftLine = 0;
 	
 	public CheckOut(CheckOutQ q) {
 		Q = q;
@@ -16,10 +17,15 @@ public class CheckOut implements ClockListener {
 	public void event (int tick){
 		if (tick >= timeOfNextEvent) {
 			
+			if((Q.size() != 0) && (Q.get(0).getTickTime() >= Q.get(0).getLeaveTime())) {
+				Q.remove(0);
+				leftLine++;
+			}
+			
 			if (Q.size() >= 1) {
 				person = Q.remove(0);		// do not send this person as of yet, make them wait. 
 				timeOfNextEvent = tick + (int) (person.getCheckOutTime() + 1);
-				totalTime = totalTime + Math.abs(tick - person.getTickTime());
+				totalTime = totalTime + (tick - person.getTickTime());
 				numPeople++;
 				completed++;
 			}	
@@ -36,5 +42,9 @@ public class CheckOut implements ClockListener {
 	
 	public int averageTotalTime() {
 		return totalTime/numPeople;
+	}
+	
+	public int getLeftLine() {
+		return leftLine;
 	}
 }
