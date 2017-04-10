@@ -1,5 +1,4 @@
-package foodCourtSim;
-import java.util.ArrayList;
+package Project_4;
 /**
  * Creates an Eatery where people in line are sent to. 
  * 
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 public class Eatery implements ClockListener {
 	
 	/** ArrayList that will act as the line for the eatery */
-	private ArrayList<Person> Q = new ArrayList<Person>();
+	private LinkedList<Person> Q = new LinkedList<Person>();
 	
 	/** The time until the next should occur */
 	private int timeOfNextEvent = 0;
@@ -64,7 +63,7 @@ public class Eatery implements ClockListener {
 			if((Q.size() != 0) && (Q.get(0).getTickTime() >= Q.get(0).getLeaveTime())) {
 				
 				// remove the person from the line
-				Q.remove(0);
+				Q.removeIndex(0);
 				
 				// increment the amount who left by one
 				leftLine++;
@@ -86,7 +85,7 @@ public class Eatery implements ClockListener {
 				
 				// remove the person from the line
 				// but do not send them on yet
-				person = Q.remove(0);
+				person = Q.removeIndex(0);
 				
 				// set the time that the next event is supposed to occur
 				timeOfNextEvent = tick + (int) (person.getEateryTime() + 1); 

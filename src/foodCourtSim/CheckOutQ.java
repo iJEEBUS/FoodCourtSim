@@ -1,6 +1,4 @@
-package foodCourtSim;
-
-import java.util.ArrayList;
+package Project_4;
 
 /*************************************************************************************
  * Create an ArrayList<Person> that is to be used to hold the people in order to simulate 
@@ -8,9 +6,10 @@ import java.util.ArrayList;
  * 
  * @author Ron
  ************************************************************************************/
+
 public class CheckOutQ {
 	/** The ArrayList that is used to represent the check out line */
-	private ArrayList<Person> q;
+	private LinkedList<Person> q;
 	
 	/** The max amount of people that were in the queue */
 	private int maxQ;
@@ -20,7 +19,7 @@ public class CheckOutQ {
 	 * and sets the maxQ variable to 0.
 	 *******************************************************************************/
 	public CheckOutQ() {
-		q = new ArrayList<Person>();
+		q = new LinkedList<Person>();
 		maxQ = 0;
 	}
 	
@@ -41,7 +40,7 @@ public class CheckOutQ {
 	 * @return
 	 *******************************************************************************/
 	public Person remove(int i) {
-		return q.remove(i);
+		return q.removeIndex(i);
 	}
 	
 	/********************************************************************************
