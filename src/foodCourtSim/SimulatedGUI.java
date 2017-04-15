@@ -11,12 +11,14 @@ public class SimulatedGUI extends JPanel{
 
 	private JPanel buttonPanel;
 	private JPanel dataPanel;
+	private JPanel displayPanel;
+	private JPanel buttonDisplayHolder;
 
 	private action listener;
 
 	private JButton addEatery, removeEatery, addCheckout, removeCheckout, start, stop, editInfo;
 
-	private int simY = 500, simX = 700, bpX = 200, dpY = 100;
+	private int simY = 500, simX = 700, bpX = 200, dpY = 100, bpY = 320;
 
 	private Dimension button;
 
@@ -26,13 +28,25 @@ public class SimulatedGUI extends JPanel{
 		button = new Dimension((bpX - 10), 40);
 		sim = new GUIsimulation(simX, simY);
 		add(sim);
+		
+		buttonDisplayHolder = new JPanel();
+		buttonDisplayHolder.setPreferredSize(new Dimension(bpX, simY));
+		buttonDisplayHolder.setBackground(Color.GRAY);
+		add(buttonDisplayHolder);
 
 		buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(bpX, simY));
+		buttonPanel.setPreferredSize(new Dimension(bpX-2, bpY));
 		buttonPanel.setBackground(Color.white);
-		add(buttonPanel);
+		buttonDisplayHolder.add(buttonPanel);
 
 		addButtons();
+		
+		displayPanel = new JPanel();
+		displayPanel.setPreferredSize(new Dimension(bpX-2, simY - (bpY)));
+		displayPanel.setBackground(Color.white);
+		buttonDisplayHolder.add(displayPanel);
+		
+		sim.display(displayPanel);
 
 		dataPanel = new JPanel();
 		dataPanel.setPreferredSize(new Dimension(simX + bpX + 5, dpY));
@@ -132,6 +146,9 @@ public class SimulatedGUI extends JPanel{
 			
 			else
 				sim.getInfo();
+			
+			sim.redisplay();
+			sim.repaint();
 		}
 
 	}
