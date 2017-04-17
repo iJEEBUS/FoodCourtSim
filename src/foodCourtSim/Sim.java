@@ -13,6 +13,12 @@ import javax.swing.JPanel;
  */
 public class Sim {
 
+	/** Used to set the size of the GUI */
+	private int simY = 500, simX = 700;
+	
+	/** Instance of GUI to scrape inputted info */
+	GUIsimulation sim = new GUIsimulation(simX, simY);
+	
 	/** How many people successfully completed their visits */
 	private int throughput;
 	
@@ -32,7 +38,7 @@ public class Sim {
 	int left_in_line;
 	
 	
-	public void run(JPanel panel, int seconds_to_next_person, int avg_time_cashier, 
+	public void run(int seconds_to_next_person, int avg_time_cashier, 
 			int total_time, int avg_eatery_time, 
 			int leave_time, int num_eateries){
 		

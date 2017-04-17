@@ -1,4 +1,4 @@
-package Project_4;
+package foodCourtSim;
 /**
  * Creates an Eatery where people in line are sent to. 
  * 

@@ -1,10 +1,10 @@
-package Project_4;
+package foodCourtSim;
 
 import java.awt.*;
 import javax.swing.*;
 
-public class GUIsimulation extends JPanel implements ClockListener{
-	private Color[][] foodCourt;
+public class GUIsimulation extends JPanel {
+	private Person[][] foodCourt;
 
 	private int rows, columns, size = 10;
 
@@ -12,13 +12,10 @@ public class GUIsimulation extends JPanel implements ClockListener{
 	averageCheckOutTime, averageLeaveTime, runTime;
 
 	private CheckOutQ Q;
-	private Eatery[] eateries;
-	private CheckOut[] checkouts;
 
 	private PersonProducer produce;
 
 	private boolean isRunning = false;
-	private Clock clk;
 
 	private JPanel infoPanel;
 
@@ -30,38 +27,27 @@ public class GUIsimulation extends JPanel implements ClockListener{
 	private JTextField leaveTimeBox;
 	private JTextField totTimeBox;
 
-	private JLabel eat;
-	private JLabel check;
-	private JLabel newPerson;
-	private JLabel toGetFood;
-	private JLabel toCheckOut;
-	private JLabel toLeaveLine;
-	
-	private Color eaterieColor = Color.GRAY;
-	private Color checkoutColor = Color.GRAY;
-
+	/********************************************************************************
+	 * Constructor that creates the GUIsimulation
+	 * @param width
+	 * @param height
+	 *******************************************************************************/
 	public GUIsimulation(int width, int height) {
 		this.rows = height/10;
 		this.columns = width/10;
-		foodCourt = new Color[rows][columns];
-		setFoodCourt();
-		clk = new Clock();
+		foodCourt = new Person[rows][columns];
+		Clock clk = new Clock();
 		defaultValues();
-		fillCheckouts();
-		fillEateries();
 		Q = new CheckOutQ();
 		clk.add(produce);
 		setPreferredSize(new Dimension(columns*size, rows*size));
-
+		
 		getInfoCreater();
 	}
-
-	private void setFoodCourt() {
-		for(int i = 0; i < columns; i++)
-			for(int j = 0; j < rows; j++)
-				foodCourt[j][i] = Color.white;
-	}
-
+	
+	/********************************************************************************
+	 * Default values to be used in the simulation
+	 *******************************************************************************/
 	private void defaultValues() {
 		rows = 50;
 		columns = 70;
@@ -74,7 +60,12 @@ public class GUIsimulation extends JPanel implements ClockListener{
 		runTime = 10000;
 	}
 
+	/********************************************************************************
+	 * Parses the information that is entered by the user in the JOptionPane
+	 *******************************************************************************/
 	public void getInfo() {
+		//JOptionPane to be used
+
 		try {
 			int result = JOptionPane.showConfirmDialog(null, infoPanel, 
 					"Please enter newRows, columns and winning value.", JOptionPane.OK_CANCEL_OPTION);
@@ -97,8 +88,8 @@ public class GUIsimulation extends JPanel implements ClockListener{
 			JOptionPane.showMessageDialog(null, "Info unchanged due error");
 		}
 
-		eateries = new Eatery[numEateries];
-		checkouts = new CheckOut[numCheckouts];
+		Eatery[] eateries = new Eatery[numEateries];
+		CheckOut[] checkouts = new CheckOut[numCheckouts];
 
 		for(int i = 0; i < numEateries; i++)
 			eateries[i] = new Eatery(Q);
@@ -110,17 +101,34 @@ public class GUIsimulation extends JPanel implements ClockListener{
 				averageEaterieTime, averageCheckOutTime, averageLeaveTime);
 	}
 
+	
+	
+	
+	
+	// Modify the size of the JTextFields in so that they are all the same size
+	///////////////////////////////////////////////////////////////////
 	private void getInfoCreater() {
-		eatBox = new JTextField(5);
-		checkBox = new JTextField(5);
-		nextTimeBox = new JTextField(5);
-		eatTimeBox = new JTextField(5);
-		checkTimeBox = new JTextField(5);
-		leaveTimeBox = new JTextField(5);
-		totTimeBox = new JTextField(5);
-
+		eatBox = new JTextField("" + numCheckouts);
+		checkBox = new JTextField("" + numEateries);
+		nextTimeBox = new JTextField("" + numTicksNextPerson);
+		eatTimeBox = new JTextField("" + averageEaterieTime);
+		checkTimeBox = new JTextField("" + averageCheckOutTime);
+		leaveTimeBox = new JTextField("" + averageLeaveTime);
+		totTimeBox = new JTextField("" + runTime);
+		
+		// attempt to set the size of the textfields to make them uniform
+		Dimension d = new Dimension(20, 5);
+		
+		eatBox.setMinimumSize(d);
+		checkBox.setMinimumSize(d);
+		nextTimeBox.setMinimumSize(d);
+		eatTimeBox.setMinimumSize(d);
+		checkTimeBox.setMinimumSize(d);
+		leaveTimeBox.setMinimumSize(d);
+		totTimeBox.setMinimumSize(d);
+		
 		infoPanel = new JPanel(new GridBagLayout());
-
+		
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		gbc.gridx = 0;
@@ -128,190 +136,179 @@ public class GUIsimulation extends JPanel implements ClockListener{
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets = new Insets(5, 0, 5, 5);
 		infoPanel.add(new JLabel("Seconds to the Next Person"), gbc);
-
+		
 		gbc.gridy = 1;
 		infoPanel.add(new JLabel("Average Seconds per cashier"), gbc);
-
+		
 		gbc.gridy = 2;
 		infoPanel.add(new JLabel("Total time in seconds"), gbc);
-
+		
 		gbc.gridy = 3;
 		infoPanel.add(new JLabel("Average Seconds per Eatery"), gbc);
-
+		
 		gbc.gridy = 4;
 		infoPanel.add(new JLabel("Seconds Before Person leaves"), gbc);
-
+		
 		gbc.gridy = 5;
 		infoPanel.add(new JLabel("Number of Eateries"), gbc);
-
+		
 		gbc.gridy = 6;
 		infoPanel.add(new JLabel("Number of Check Outs"), gbc);
-
+		
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		infoPanel.add(nextTimeBox, gbc);
-
+		
 		gbc.gridy = 1;
 		infoPanel.add(checkTimeBox, gbc);
-
+		
 		gbc.gridy = 2;
 		infoPanel.add(totTimeBox, gbc);
-
+		
 		gbc.gridy = 3;
 		infoPanel.add(eatTimeBox, gbc);
-
+		
 		gbc.gridy = 4;
 		infoPanel.add(leaveTimeBox, gbc);
-
+		
 		gbc.gridy = 5;
 		infoPanel.add(eatBox, gbc);
-
+		
 		gbc.gridy = 6;
 		infoPanel.add(checkBox, gbc);
-
+		
 		infoPanel.setPreferredSize(new Dimension(250,300));
 	}
 
-	public void event(int time) {
+	/********************************************************************************
+	 * Used to control the simulation
+	 *******************************************************************************/
+	public void oneTick() {
 		//controls the simulation
-		repaint();
 	}
 
+	/********************************************************************************
+	 * Used for the creation of a visual aid that will show the actual movements
+	 * of the lines
+	 *******************************************************************************/
 	public void paintComponent(Graphics g) {
-		for(int r = 0; r < rows; r++)
-			for(int c = 0; c < columns; c++) {
-				g.setColor(foodCourt[r][c]);
-				g.fillRect(c*size, r*size, size, size);
-			}
-	}
-	
-	private void fillEateries() {
-		int Y = rows / (numEateries + 1);
-		
-		for(int i = 0; i < rows; i++)
-			if(foodCourt[i][2*columns/3] == eaterieColor)
-				addEaterySim(i+1, 2*columns/3,Color.WHITE);
-		
-		for(int i = 1; i <= numEateries; i++) {
-			addEaterySim(Y*i, 2*columns/3,eaterieColor);
-		}	
-	}
-	
-	private void addEaterySim(int Y, int X, Color color) {
-		foodCourt[Y-1][X] = color;
-		foodCourt[Y-1][X+1] = color;
-		foodCourt[Y-1][X+2] = color;
-		foodCourt[Y-1][X+3] = color;
-		foodCourt[Y][X] = color;
-		foodCourt[Y][X+1] = color;
-		foodCourt[Y][X+2] = color;
-		foodCourt[Y][X+3] = color;
-		foodCourt[Y+1][X] = color;
-		foodCourt[Y+1][X+1] = color;
-		foodCourt[Y+1][X+2] = color;
-		foodCourt[Y+1][X+3] = color;	
-	}
-	
-	private void fillCheckouts() {
-		int Y = rows / (numCheckouts + 1);
+		for(int row=0; row<this.rows; row++){
+			for(int col=0; col<this.columns; col++){
+				Person p = foodCourt[row][col];
 
-		for(int i = 0; i < rows; i++)
-			if(foodCourt[i][columns/8] == eaterieColor)
-				addCheckoutSim(i+1,columns/8,Color.WHITE);
-		
-		for(int i = 1; i <= numCheckouts; i++) {
-			addCheckoutSim(Y*i,columns/8,checkoutColor);
+				// set color to white if no critter here
+				if(p == null){
+					g.setColor(Color.WHITE);
+					// set color to critter color   
+//				}else{    
+//					g.setColor(p.getColor());
+				}
+
+				// paint the location
+				g.fillRect(col*size, row*size, size, size);
+			}
 		}
 	}
-	
-	private void addCheckoutSim(int Y, int X, Color color) {
-		foodCourt[Y-1][X] = color;
-		foodCourt[Y-1][X+1] = color;
-		foodCourt[Y-1][X+2] = color;
-		foodCourt[Y-1][X+3] = color;
-		foodCourt[Y][X] = color;
-		foodCourt[Y][X+1] = color;
-		foodCourt[Y][X+2] = color;
-		foodCourt[Y][X+3] = color;
-		foodCourt[Y+1][X] = color;
-		foodCourt[Y+1][X+1] = color;
-		foodCourt[Y+1][X+2] = color;
-		foodCourt[Y+1][X+3] = color;	
-	}
 
+	/********************************************************************************
+	 * Sets the isRunning variable to true
+	 *******************************************************************************/
 	public void start() {
-		if(!isRunning)
-			clk.run(runTime);
-
 		isRunning = true;
 	}
 
+	/********************************************************************************
+	 * Sets the isRunning variable to false
+	 *******************************************************************************/
 	public void stop() {
-		if(isRunning)
-			//clk.stop();
-
-			isRunning = false;
+		isRunning = false;
 	}
 
+	/********************************************************************************
+	 * Increment the eateries by one
+	 *******************************************************************************/
 	public void addEatery() {
 		numEateries++;
-		fillEateries();
 	}
 
+	/********************************************************************************
+	 * Increment the checkouts by one
+	 *******************************************************************************/
 	public void addCheckout() {
 		numCheckouts++;
-		fillCheckouts();
 	}
 
+	/********************************************************************************
+	 * Decrement eateries by one
+	 *******************************************************************************/
 	public void removeEatery() {
-		if(numEateries != 0) {
-			numEateries--;
-			fillEateries();
-		}
+		numEateries--;
 	}
 
+	/********************************************************************************
+	 * Decrement the checkouts by one
+	 *******************************************************************************/
 	public void removeCheckout() {
-		if(numCheckouts != 0) {
-			numCheckouts--;
-			fillCheckouts();
-		}
+		numCheckouts--;
 	}
+	
+	// these throw a Null Pointer Exception if they are empty
 
-	public void display(JPanel panel) {
-		Font textFont = new Font("Helvetica", Font.BOLD, 16);
-
-		eat = new JLabel("Eateries: " + numEateries);
-		eat.setFont(textFont);
-
-		check = new JLabel("Check Outs: " + numCheckouts);
-		check.setFont(textFont);
-
-		newPerson = new JLabel("New Person: " + numTicksNextPerson + "s");
-		newPerson.setFont(textFont);
-
-		toGetFood = new JLabel("To Get Food: " + averageEaterieTime + "s");
-		toGetFood.setFont(textFont);
-
-		toCheckOut = new JLabel("To Check Out: " + averageCheckOutTime + "s");
-		toCheckOut.setFont(textFont);
-
-		toLeaveLine = new JLabel("To Leave Line: " + averageLeaveTime + "s");
-		toLeaveLine.setFont(textFont);
-
-		panel.add(eat);
-		panel.add(check);
-		panel.add(newPerson);
-		panel.add(toGetFood);
-		panel.add(toCheckOut);
-		panel.add(toLeaveLine);
+	/********************************************************************************
+	 * Gets the time until the next person enters the line as entered by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getNextTime() {
+		return Integer.parseInt(nextTimeBox.getText());
 	}
-
-	public void redisplay() {
-		eat.setText("Eateries: " + numEateries);
-		check.setText("Check Outs: " + numCheckouts);
-		newPerson.setText("New Person: " + numTicksNextPerson + "s");
-		toGetFood.setText("To Get Food: " + averageEaterieTime + "s");
-		toCheckOut.setText("To Check Out: " + averageCheckOutTime + "s");
-		toLeaveLine.setText("To Leave Line: " + averageLeaveTime + "s");
+	
+	/********************************************************************************
+	 * Gets the average time that is spent at each cashier as entered by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getAvgTimeCashier() {
+		return Integer.parseInt(checkTimeBox.getText());
 	}
+	
+	/********************************************************************************
+	 * Gets the total time that the program will run as entered by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getTotalTime() {
+		return Integer.parseInt(totTimeBox.getText());
+	}
+	
+	/********************************************************************************
+	 * Gets the average time spent at the eatery as entered by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getAvgEateryTime() {
+		return Integer.parseInt(eatTimeBox.getText());
+	}
+	
+	/********************************************************************************
+	 * Gets the average time that it takes people to leave the line as entered
+	 * by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getLeaveTime() {
+		return Integer.parseInt(leaveTimeBox.getText());
+	}
+	
+	/********************************************************************************
+	 * Gets the number of eateries available as entered by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getNumEateries() {
+		return Integer.parseInt(eatBox.getText());
+	}
+	
+	/********************************************************************************
+	 * Gets the number of checkouts that are available as entered by the user
+	 * @return int
+	 *******************************************************************************/
+	public int getNumCheckouts() {
+		return Integer.parseInt(checkBox.getText());
+	}
+	
 }

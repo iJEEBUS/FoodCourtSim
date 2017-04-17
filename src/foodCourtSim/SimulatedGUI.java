@@ -1,4 +1,4 @@
-package Project_4;
+package foodCourtSim;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -8,17 +8,23 @@ import javax.swing.*;
 public class SimulatedGUI extends JPanel{
 
 	private GUIsimulation sim;
+	
+	private Sim s = new Sim();
+
+	private GridBagConstraints gbc = new GridBagConstraints();
 
 	private JPanel buttonPanel;
 	private JPanel dataPanel;
-	private JPanel displayPanel;
-	private JPanel buttonDisplayHolder;
 
 	private action listener;
 
 	private JButton addEatery, removeEatery, addCheckout, removeCheckout, start, stop, editInfo;
 
-	private int simY = 500, simX = 700, bpX = 200, dpY = 100, bpY = 320;
+	// make these align to the left of the data panel
+	private JLabel output_lbl, throughput_lbl, avg_time_lbl, left_line_lbl, max_q_lbl;
+	private JLabel output_out_lbl, throughput_out_lbl, avg_time_out_lbl, left_line_out_lbl, max_q_out_lbl;
+
+	private int simY = 500, simX = 700, bpX = 200, dpY = 100;
 
 	private Dimension button;
 
@@ -28,28 +34,17 @@ public class SimulatedGUI extends JPanel{
 		button = new Dimension((bpX - 10), 40);
 		sim = new GUIsimulation(simX, simY);
 		add(sim);
-		
-		buttonDisplayHolder = new JPanel();
-		buttonDisplayHolder.setPreferredSize(new Dimension(bpX, simY));
-		buttonDisplayHolder.setBackground(Color.GRAY);
-		add(buttonDisplayHolder);
 
 		buttonPanel = new JPanel();
-		buttonPanel.setPreferredSize(new Dimension(bpX-2, bpY));
+		buttonPanel.setPreferredSize(new Dimension(bpX, simY));
 		buttonPanel.setBackground(Color.white);
-		buttonDisplayHolder.add(buttonPanel);
+		add(buttonPanel);
 
 		addButtons();
-		
-		displayPanel = new JPanel();
-		displayPanel.setPreferredSize(new Dimension(bpX-2, simY - (bpY)));
-		displayPanel.setBackground(Color.white);
-		buttonDisplayHolder.add(displayPanel);
-		
-		sim.display(displayPanel);
 
 		dataPanel = new JPanel();
 		dataPanel.setPreferredSize(new Dimension(simX + bpX + 5, dpY));
+		dataPanel.setLayout(new GridBagLayout());
 		dataPanel.setBackground(Color.white);
 		add(dataPanel);
 
@@ -90,7 +85,7 @@ public class SimulatedGUI extends JPanel{
 		removeCheckout.setPreferredSize(button);
 		removeCheckout.setFocusPainted(false);
 		removeCheckout.addActionListener(listener);
-		
+
 		editInfo = new JButton("Edit Info");
 		editInfo.setPreferredSize(button);
 		editInfo.setFocusPainted(false);
@@ -107,6 +102,57 @@ public class SimulatedGUI extends JPanel{
 
 	private void addData() {
 
+		// left side of data panel
+		output_lbl = new JLabel("Output Information");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		dataPanel.add(output_lbl, gbc);
+
+		throughput_lbl = new JLabel("Throughput:");
+		gbc.gridy++; // 1
+		dataPanel.add(throughput_lbl, gbc);
+
+		avg_time_lbl = new JLabel("Average time for a Person from start to finish: ");
+		gbc.gridy++; // 2
+		dataPanel.add(avg_time_lbl, gbc);
+
+		left_line_lbl = new JLabel("Number of people left line: ");
+		gbc.gridy++; // 3
+		dataPanel.add(left_line_lbl, gbc);
+
+		max_q_lbl = new JLabel("Max Q length cashier line: ");
+		gbc.gridy++; // 4
+		dataPanel.add(max_q_lbl, gbc);	
+		
+		// right side of data panel
+		output_out_lbl = new JLabel("--------------------------------");
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		dataPanel.add(output_out_lbl, gbc);
+		
+		throughput_out_lbl = new JLabel("");
+		gbc.gridy++; // 1
+		dataPanel.add(throughput_out_lbl, gbc);
+		
+		avg_time_out_lbl = new JLabel("");
+		gbc.gridy++; // 2
+		dataPanel.add(avg_time_out_lbl, gbc);
+		
+		left_line_out_lbl = new JLabel("");
+		gbc.gridy++; // 3
+		dataPanel.add(left_line_out_lbl, gbc);
+		
+		max_q_out_lbl = new JLabel("");
+		gbc.gridy++; // 4
+		dataPanel.add(max_q_out_lbl, gbc);
+	}
+	
+	private void updateGUI() {
+		throughput_out_lbl.setText("" + s.getThroughput());
+		avg_time_out_lbl.setText("" + s.getAvgTime());
+		left_line_out_lbl.setText("" + s.getPeopleLeft());
+		max_q_out_lbl.setText("" + s.getMaxQueueSize());
+		dataPanel.repaint();
 	}
 
 	public static void main(String[] args) {
@@ -126,10 +172,18 @@ public class SimulatedGUI extends JPanel{
 		public void actionPerformed(ActionEvent event) {
 			Object source = event.getSource();
 
-			if(source == start) 
+			if(source == start) { 
+				// shows that the sim is active
 				sim.start();
+				
+				// arguments are from the GUIsimulation class that the user inputs
+				s.run(sim.getNextTime(), sim.getAvgTimeCashier(), sim.getTotalTime(), 
+						sim.getAvgEateryTime(), sim.getLeaveTime(), sim.getNumEateries());
+				updateGUI();
+			}
 
 			else if(source == stop)
+				// shows that the sim is inactive
 				sim.stop();
 
 			else if(source == addEatery)
@@ -140,16 +194,12 @@ public class SimulatedGUI extends JPanel{
 
 			else if(source == removeEatery)
 				sim.removeEatery();
-			
+
 			else if(source == removeCheckout)
 				sim.removeCheckout();
-			
+
 			else
 				sim.getInfo();
-			
-			sim.redisplay();
-			sim.repaint();
 		}
-
 	}
 }

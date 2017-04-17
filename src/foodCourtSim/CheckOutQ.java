@@ -1,4 +1,4 @@
-package Project_4;
+package foodCourtSim;
 
 /*************************************************************************************
  * Create an ArrayList<Person> that is to be used to hold the people in order to simulate 

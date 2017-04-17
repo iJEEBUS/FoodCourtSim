@@ -1,4 +1,4 @@
-package Project_4;
+package foodCourtSim;
 
 public class Node<E> {
 	private E data;

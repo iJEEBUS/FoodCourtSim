@@ -275,7 +275,7 @@ public class GUI {
 				leave_time = Integer.parseInt(person_leaves_txt.getText());
 				num_eateries = Integer.parseInt(num_eateries_txt.getText());
 
-				sim.run(panel, seconds_to_next_person, avg_time_cashier, total_time, 
+				sim.run(seconds_to_next_person, avg_time_cashier, total_time, 
 						avg_time_eatery, leave_time, num_eateries);
 
 				// need to add all of the throughputs, the people who have left the line, 
