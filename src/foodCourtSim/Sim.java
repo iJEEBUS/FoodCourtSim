@@ -1,8 +1,5 @@
-package foodCourtSim;
+package Project_4;
 
-import java.awt.Dialog;
-
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
  * The main class that is used to run the Food Court Simulation. This program

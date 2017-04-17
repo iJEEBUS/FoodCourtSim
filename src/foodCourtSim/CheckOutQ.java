@@ -1,5 +1,7 @@
 package Project_4;
 
+import java.awt.Color;
+
 /*************************************************************************************
  * Create an ArrayList<Person> that is to be used to hold the people in order to simulate 
  * a checkout line.
@@ -69,5 +71,12 @@ public class CheckOutQ {
 			return null;
 		
 		return q.get(index);
+	}
+	
+	public Color getColorIndex(int index) {
+		if(index >= q.size())
+			return Color.white;
+
+		return q.get(index).getColor();
 	}
 }

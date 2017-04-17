@@ -1,4 +1,4 @@
-package foodCourtSim;
+package Project_4;
 
 //import foodCourtSim.Pane;
 

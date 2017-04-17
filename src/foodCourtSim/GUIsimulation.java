@@ -3,13 +3,15 @@ package Project_4;
 import java.awt.*;
 import javax.swing.*;
 
-public class GUIsimulation extends JPanel implements ClockListener{
+public class GUIsimulation extends JPanel{
 	private Color[][] foodCourt;
 
 	private int rows, columns, size = 10;
 
 	private int numEateries, numCheckouts, numTicksNextPerson, averageEaterieTime,
-	averageCheckOutTime, averageLeaveTime, runTime;
+	averageCheckOutTime, averageLeaveTime, runTime, ticks;
+	
+	private int Yc, Ye, Xe, Xc;
 
 	private CheckOutQ Q;
 	private Eatery[] eateries;
@@ -68,10 +70,36 @@ public class GUIsimulation extends JPanel implements ClockListener{
 		numEateries = 3;
 		numCheckouts = 2;
 		numTicksNextPerson = 20;
-		averageEaterieTime = 20;
+		averageEaterieTime = 5;
 		averageCheckOutTime = 20;
 		averageLeaveTime = 900;
-		runTime = 10000;
+		runTime = 1000;
+
+		eateries = new Eatery[numEateries];
+		checkouts = new CheckOut[numCheckouts];
+
+		for(int i = 0; i < numEateries; i++)
+			eateries[i] = new Eatery(Q);
+
+		for(int i = 0; i < numCheckouts; i++)
+			checkouts[i] = new CheckOut(Q);
+
+		produce = new PersonProducer(eateries, checkouts, numTicksNextPerson,
+				averageEaterieTime, averageCheckOutTime, averageLeaveTime);
+	}
+	
+	private void setInfo() {
+		eateries = new Eatery[numEateries];
+		checkouts = new CheckOut[numCheckouts];
+
+		for(int i = 0; i < numEateries; i++)
+			eateries[i] = new Eatery(Q);
+
+		for(int i = 0; i < numCheckouts; i++)
+			checkouts[i] = new CheckOut(Q);
+
+		produce = new PersonProducer(eateries, checkouts, numTicksNextPerson,
+				averageEaterieTime, averageCheckOutTime, averageLeaveTime);
 	}
 
 	public void getInfo() {
@@ -172,8 +200,19 @@ public class GUIsimulation extends JPanel implements ClockListener{
 		infoPanel.setPreferredSize(new Dimension(250,300));
 	}
 
-	public void event(int time) {
-		//controls the simulation
+	public void oneTick() {
+		clk.oneTick();
+		
+		clearBoard();
+		
+		for(int i = 1; i <= numEateries; i++)
+			for(int j = 0; j < 24; j++) {
+				foodCourt[(Ye*i)+2][Xe + j] = eateries[i-1].getColorIndex(j);
+			}
+		
+		for(int i = 0; i < 25; i++)
+			foodCourt[rows/2][(Xc+6) + i] = Q.getColorIndex(i);
+		
 		repaint();
 	}
 
@@ -185,15 +224,23 @@ public class GUIsimulation extends JPanel implements ClockListener{
 			}
 	}
 	
+	private void clearBoard() {
+		for(int r = 0; r < rows; r++)
+			for(int c = columns; c < columns; c++)
+				if(foodCourt[r][c] != eaterieColor || foodCourt[r][c] != checkoutColor)
+					foodCourt[r][c] = Color.WHITE;
+	}
+	
 	private void fillEateries() {
-		int Y = rows / (numEateries + 1);
+		Ye = rows / (numEateries + 1);
+		Xe = 2*columns/3;
 		
 		for(int i = 0; i < rows; i++)
 			if(foodCourt[i][2*columns/3] == eaterieColor)
-				addEaterySim(i+1, 2*columns/3,Color.WHITE);
+				addEaterySim(i+1, Xe,Color.WHITE);
 		
 		for(int i = 1; i <= numEateries; i++) {
-			addEaterySim(Y*i, 2*columns/3,eaterieColor);
+			addEaterySim(Ye*i, Xe,eaterieColor);
 		}	
 	}
 	
@@ -213,14 +260,15 @@ public class GUIsimulation extends JPanel implements ClockListener{
 	}
 	
 	private void fillCheckouts() {
-		int Y = rows / (numCheckouts + 1);
-
+		Yc = rows / (numCheckouts + 1);
+		Xc = columns/8;
+		
 		for(int i = 0; i < rows; i++)
 			if(foodCourt[i][columns/8] == eaterieColor)
-				addCheckoutSim(i+1,columns/8,Color.WHITE);
+				addCheckoutSim(i+1, Xc,Color.WHITE);
 		
 		for(int i = 1; i <= numCheckouts; i++) {
-			addCheckoutSim(Y*i,columns/8,checkoutColor);
+			addCheckoutSim(Yc*i, Xc,checkoutColor);
 		}
 	}
 	
@@ -239,33 +287,22 @@ public class GUIsimulation extends JPanel implements ClockListener{
 		foodCourt[Y+1][X+3] = color;	
 	}
 
-	public void start() {
-		if(!isRunning)
-			clk.run(runTime);
-
-		isRunning = true;
-	}
-
-	public void stop() {
-		if(isRunning)
-			//clk.stop();
-
-			isRunning = false;
-	}
-
 	public void addEatery() {
 		numEateries++;
+		setInfo();
 		fillEateries();
 	}
 
 	public void addCheckout() {
 		numCheckouts++;
+		setInfo();
 		fillCheckouts();
 	}
 
 	public void removeEatery() {
 		if(numEateries != 0) {
 			numEateries--;
+			setInfo();
 			fillEateries();
 		}
 	}
@@ -273,8 +310,16 @@ public class GUIsimulation extends JPanel implements ClockListener{
 	public void removeCheckout() {
 		if(numCheckouts != 0) {
 			numCheckouts--;
+			setInfo();
 			fillCheckouts();
 		}
+	}
+	
+	public boolean checkTicks(int ticks) {
+		if(ticks == runTime)
+			return true;
+		
+		return false;
 	}
 
 	public void display(JPanel panel) {

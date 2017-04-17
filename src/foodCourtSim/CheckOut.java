@@ -1,4 +1,4 @@
-package foodCourtSim;
+package Project_4;
 
 /*************************************************************************************
  * This class handles all of the logic that places/removes customers from 

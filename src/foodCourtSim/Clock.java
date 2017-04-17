@@ -1,7 +1,4 @@
-/**
- * 
- */
-package foodCourtSim;
+package Project_4;
 
 /*************************************************************************************
  * Creates a clock that is used by the Eatery and Person classes and informs each
@@ -20,12 +17,15 @@ public class Clock {
 	/** The maximum number of objects that can be placed in the ClockListener[] */
 	private int MAX = 100;
 
+	private int currentTime;
+
 	/********************************************************************************
 	 * Constructor the the Clock class. 
 	 * Initializes numListeners to zero and creates a new ClockListener of size MAX
 	 *******************************************************************************/
 	public Clock() {
 		numListeners = 0;
+		currentTime = 0;
 		myListeners = new ClockListener[MAX];
 	}
 
@@ -45,10 +45,20 @@ public class Clock {
 				// call the event method for the object
 				myListeners[j].event(currentTime);
 
-			//			try {
-			//				Thread.sleep(1000);
-			//			} catch (InterruptedException e) {}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {}
 		}
+	}
+
+	public void oneTick() {
+		// while j is less than the amount of objects in the array
+		for (int j = 0; j < numListeners; j++)
+			
+			// call the event method for the object
+			myListeners[j].event(currentTime);
+
+		currentTime++;
 	}
 
 	/********************************************************************************
@@ -59,7 +69,7 @@ public class Clock {
 	public void add(ClockListener cl) {
 		// place the object at the end of the array
 		myListeners[numListeners] = cl;
-		
+
 		// increment the number of listeners in the array
 		numListeners++;
 	}
