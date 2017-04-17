@@ -1,5 +1,7 @@
 package Project_4;
 
+import java.awt.Color;
+
 /*************************************************************************************
  * This class handles all of the logic that places/removes customers from 
  * the checkout line by making using of the event() method, which relies 
@@ -17,6 +19,7 @@ public class CheckOut implements ClockListener {
 	private int numPeople = 0;
 	private CheckOutQ Q;
 	private int leftLine = 0;
+	private Color C;
 
 	/********************************************************************************
 	 * Constructor for the CheckOut class
@@ -35,6 +38,7 @@ public class CheckOut implements ClockListener {
 	 *******************************************************************************/
 	public void event (int tick){
 		if (tick >= timeOfNextEvent) {
+			C = Color.white;
 			
 			// if the queue is populated AND the tick time is >= the persons leave
 			// time then remove them from the line and increment leftLine by one
@@ -42,26 +46,29 @@ public class CheckOut implements ClockListener {
 				Q.remove(0);
 				leftLine++;
 			}
-			
+
 			// if the size of the queue is >= one
 			if (Q.size() >= 1) {
 				// variable for the current person
 				person = Q.remove(0);		// do not send this person as of yet, make them wait. 
 				
+				C = person.getColor();
+
 				// the time that the next event should occur
 				timeOfNextEvent = tick + (int) (person.getCheckOutTime() + 1);
-				
+
 				// the total amount of time that has elapsed
 				totalTime = totalTime + (tick - person.getTickTime());
-				
+
 				// the number of people who went through the line
 				numPeople++;
-				
+
 				// the number of people who completed the line
 				completed++;
 			}	
 		}
 	}
+
 	/********************************************************************************
 	 * Gets the throughput from the checkout line
 	 * @return
@@ -93,5 +100,9 @@ public class CheckOut implements ClockListener {
 	 *******************************************************************************/
 	public int getLeftLine() {
 		return leftLine;
+	}
+	
+	public Color getColoratCheckout() {
+		return C;
 	}
 }

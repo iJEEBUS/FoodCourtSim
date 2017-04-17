@@ -9,7 +9,7 @@ public class GUIsimulation extends JPanel{
 	private int rows, columns, size = 10;
 
 	private int numEateries, numCheckouts, numTicksNextPerson, averageEaterieTime,
-	averageCheckOutTime, averageLeaveTime, runTime, ticks;
+	averageCheckOutTime, averageLeaveTime, runTime;
 	
 	private int Yc, Ye, Xe, Xc;
 
@@ -18,8 +18,6 @@ public class GUIsimulation extends JPanel{
 	private CheckOut[] checkouts;
 
 	private PersonProducer produce;
-
-	private boolean isRunning = false;
 	private Clock clk;
 
 	private JPanel infoPanel;
@@ -39,23 +37,26 @@ public class GUIsimulation extends JPanel{
 	private JLabel toCheckOut;
 	private JLabel toLeaveLine;
 	
+	private boolean firstRun;
+	
 	private Color eaterieColor = Color.GRAY;
 	private Color checkoutColor = Color.GRAY;
 
 	public GUIsimulation(int width, int height) {
 		this.rows = height/10;
 		this.columns = width/10;
+		setPreferredSize(new Dimension(columns*size, rows*size));
+		
 		foodCourt = new Color[rows][columns];
+		
 		setFoodCourt();
-		clk = new Clock();
 		defaultValues();
 		fillCheckouts();
 		fillEateries();
-		Q = new CheckOutQ();
-		clk.add(produce);
-		setPreferredSize(new Dimension(columns*size, rows*size));
 
 		getInfoCreater();
+		
+		firstRun = true;
 	}
 
 	private void setFoodCourt() {
@@ -63,32 +64,32 @@ public class GUIsimulation extends JPanel{
 			for(int j = 0; j < rows; j++)
 				foodCourt[j][i] = Color.white;
 	}
+	
+	private void setClock() {
+		clk = new Clock();
+		
+		clk.add(produce);
+		for(int i = 0; i < numEateries; i++)
+			clk.add(eateries[i]);
+		for(int j = 0; j < numCheckouts; j++)
+			clk.add(checkouts[j]);
+	}
 
 	private void defaultValues() {
 		rows = 50;
 		columns = 70;
 		numEateries = 3;
 		numCheckouts = 2;
-		numTicksNextPerson = 20;
-		averageEaterieTime = 5;
-		averageCheckOutTime = 20;
+		numTicksNextPerson = 10;
+		averageEaterieTime = 60;
+		averageCheckOutTime = 40;
 		averageLeaveTime = 900;
 		runTime = 1000;
-
-		eateries = new Eatery[numEateries];
-		checkouts = new CheckOut[numCheckouts];
-
-		for(int i = 0; i < numEateries; i++)
-			eateries[i] = new Eatery(Q);
-
-		for(int i = 0; i < numCheckouts; i++)
-			checkouts[i] = new CheckOut(Q);
-
-		produce = new PersonProducer(eateries, checkouts, numTicksNextPerson,
-				averageEaterieTime, averageCheckOutTime, averageLeaveTime);
 	}
 	
 	private void setInfo() {
+		Q = new CheckOutQ();
+		
 		eateries = new Eatery[numEateries];
 		checkouts = new CheckOut[numCheckouts];
 
@@ -124,20 +125,11 @@ public class GUIsimulation extends JPanel{
 		catch(Exception e) {
 			JOptionPane.showMessageDialog(null, "Info unchanged due error");
 		}
-
-		eateries = new Eatery[numEateries];
-		checkouts = new CheckOut[numCheckouts];
-
-		for(int i = 0; i < numEateries; i++)
-			eateries[i] = new Eatery(Q);
-
-		for(int i = 0; i < numCheckouts; i++)
-			checkouts[i] = new CheckOut(Q);
-
-		produce = new PersonProducer(eateries, checkouts, numTicksNextPerson,
-				averageEaterieTime, averageCheckOutTime, averageLeaveTime);
+		
+		fillEateries();
+		fillCheckouts();
 	}
-
+	
 	private void getInfoCreater() {
 		eatBox = new JTextField(5);
 		checkBox = new JTextField(5);
@@ -201,17 +193,27 @@ public class GUIsimulation extends JPanel{
 	}
 
 	public void oneTick() {
+		if(firstRun == true) {
+			setInfo();
+			setClock();
+		}
+		
+		firstRun = false;
+		
 		clk.oneTick();
 		
 		clearBoard();
 		
 		for(int i = 1; i <= numEateries; i++)
-			for(int j = 0; j < 24; j++) {
+			for(int j = 0; j < columns - Xe; j++) {
 				foodCourt[(Ye*i)+2][Xe + j] = eateries[i-1].getColorIndex(j);
 			}
 		
-		for(int i = 0; i < 25; i++)
-			foodCourt[rows/2][(Xc+6) + i] = Q.getColorIndex(i);
+		for(int i = 0; i < (Xe-2) - (Xc+6); i++)
+				foodCourt[rows/2][(Xc+6) + i] = Q.getColorIndex(i);
+		
+		for(int i = 0; i < numCheckouts; i++)
+			foodCourt[(Yc*(i+1))+2][Xc] = checkouts[i].getColoratCheckout();
 		
 		repaint();
 	}
@@ -228,7 +230,7 @@ public class GUIsimulation extends JPanel{
 		for(int r = 0; r < rows; r++)
 			for(int c = columns; c < columns; c++)
 				if(foodCourt[r][c] != eaterieColor || foodCourt[r][c] != checkoutColor)
-					foodCourt[r][c] = Color.WHITE;
+	 				foodCourt[r][c] = Color.WHITE;
 	}
 	
 	private void fillEateries() {
@@ -313,6 +315,14 @@ public class GUIsimulation extends JPanel{
 			setInfo();
 			fillCheckouts();
 		}
+	}
+	
+	public void reset() {
+		setFoodCourt();
+		fillEateries();
+		fillCheckouts();
+		setInfo();
+		firstRun = true;
 	}
 	
 	public boolean checkTicks(int ticks) {

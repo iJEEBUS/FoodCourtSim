@@ -62,6 +62,11 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		setPreferredSize(new Dimension(simX + bpX + 20, 
 				simY + dpY + 20));
 
+		/* 
+		 * This command makes the method run() run forever in a separate thread. If
+		 * the variable isRunning is true then the run will execute something otherwise
+		 * it just runs in the background.
+		 */
 		new Thread(this).start();
 	}
 
@@ -71,7 +76,7 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		start.setFocusPainted(false);
 		start.addActionListener(this);
 
-		stop = new JButton("Stop");
+		stop = new JButton("Stop and Reset");
 		stop.setPreferredSize(button);
 		stop.setFocusPainted(false);
 		stop.addActionListener(this);
@@ -111,24 +116,28 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 	}
 
 	private void addData() {
-
+		//STILL NEEDS TO BE DONE!!
 	}
 
 	public void run() {
 		ticks = 0;
 		try{
 			while(true) {
-				if(isRunning && !compleate) {
+				if(isRunning) {
 					sim.oneTick();
 					ticks++;
 					compleate = sim.checkTicks(ticks);
-					if(compleate)
-						System.out.println("Compleate");
+					if(compleate) {
+						isRunning = false;
+						sim.reset();
+						JOptionPane.showMessageDialog(null, "Simulation Compleate");
+					}
 				}
-				Thread.sleep(10);
+				Thread.sleep(50);
 			}
+		} catch (Exception e) {
+			System.out.println(e);
 		}
-		catch (Exception e) {}
 	}
 
 	public static void main(String[] args) {
@@ -150,8 +159,10 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 			isRunning = true;
 		}
 
-		if(source == stop)
+		if(source == stop) {
 			isRunning = false;
+			sim.reset();
+		}
 
 		if(source == addEatery)
 			sim.addEatery();
@@ -167,6 +178,12 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 
 		if(source == editInfo)
 			sim.getInfo();
+		
+		addEatery.setEnabled(!isRunning);
+		removeEatery.setEnabled(!isRunning);
+		addCheckout.setEnabled(!isRunning);
+		removeCheckout.setEnabled(!isRunning);
+		editInfo.setEnabled(!isRunning);
 
 		sim.redisplay();
 		sim.repaint();
