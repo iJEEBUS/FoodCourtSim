@@ -276,7 +276,7 @@ public class GUI {
 				num_eateries = Integer.parseInt(num_eateries_txt.getText());
 
 				sim.run(seconds_to_next_person, avg_time_cashier, total_time, 
-						avg_time_eatery, leave_time, num_eateries);
+						avg_time_eatery, leave_time, num_eateries, 2);
 
 				// need to add all of the throughputs, the people who have left the line, 
 				// and the ones who are still in line

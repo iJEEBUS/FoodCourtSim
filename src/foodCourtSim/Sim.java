@@ -1,9 +1,4 @@
 package foodCourtSim;
-
-import java.awt.Dialog;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 /**
  * The main class that is used to run the Food Court Simulation. This program
  * will allow managers and business owners to optimize how they use their
@@ -13,12 +8,6 @@ import javax.swing.JPanel;
  */
 public class Sim {
 
-	/** Used to set the size of the GUI */
-	private int simY = 500, simX = 700;
-	
-	/** Instance of GUI to scrape inputted info */
-	GUIsimulation sim = new GUIsimulation(simX, simY);
-	
 	/** How many people successfully completed their visits */
 	private int throughput;
 	
@@ -40,13 +29,13 @@ public class Sim {
 	
 	public void run(int seconds_to_next_person, int avg_time_cashier, 
 			int total_time, int avg_eatery_time, 
-			int leave_time, int num_eateries){
+			int leave_time, int num_eateries, int num_checkouts){
 		
 		// the number of eateries to be used
 		int numEateries = num_eateries;
 		
 		// the number of checkout lines to be used
-		int numCheckOuts = 2;
+		int numCheckOuts = num_checkouts;
 
 		// create a new line for the check out
 		CheckOutQ q = new CheckOutQ();
@@ -54,7 +43,7 @@ public class Sim {
 		// create a new instance of a clock
 		Clock clk = new Clock();
 		
-		// array that has specified amount of eateries-
+		// array that has specified amount of eateries
 		Eatery[] eateryList = new Eatery[numEateries];	//array of eateries so multiple can be made
 		CheckOut[] checkoutList = new CheckOut[numCheckOuts];
 		
@@ -77,7 +66,7 @@ public class Sim {
 		clk.add(produce);
 
 		// start the simulation
-		clk.run(10000);
+		clk.run(total_time);
 
 		// the number of people that are currently in line
 		int peopleInLine = q.size();

@@ -1,5 +1,7 @@
 package foodCourtSim;
 
+import java.awt.Color;
+
 /*************************************************************************************
  * Create an ArrayList<Person> that is to be used to hold the people in order to simulate 
  * a checkout line.
@@ -69,5 +71,18 @@ public class CheckOutQ {
 			return null;
 		
 		return q.get(index);
+	}
+	
+	/********************************************************************************
+	 * Returns the color that is located at this point in the queue.
+	 * 
+	 * @param index the index whom's color is wanted
+	 * @return Color the color of the index
+	 *******************************************************************************/
+	public Color getColorIndex(int index) {
+		if(index >= q.size())
+			return Color.white;
+
+		return q.get(index).getColor();
 	}
 }
