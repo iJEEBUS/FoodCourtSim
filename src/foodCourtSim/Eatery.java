@@ -5,7 +5,7 @@ import java.awt.Color;
 /**
  * Creates an Eatery where people in line are sent to. 
  * 
- * @author Ron
+ * @author Ron, Patryk, Mitch, Tyler
  */
 public class Eatery implements ClockListener {
 

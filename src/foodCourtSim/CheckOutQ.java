@@ -6,7 +6,7 @@ import java.awt.Color;
  * Create an ArrayList<Person> that is to be used to hold the people in order to simulate 
  * a checkout line.
  * 
- * @author Ron
+ * @author Ron, Patryk, Mitch, Tyler
  ************************************************************************************/
 
 public class CheckOutQ {

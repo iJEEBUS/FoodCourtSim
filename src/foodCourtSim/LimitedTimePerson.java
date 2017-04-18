@@ -1,6 +1,12 @@
 package foodCourtSim;
 
 import java.awt.Color;
+/*************************************************************************************
+ * Helps to create the person that is limited on time.
+ * 
+ * @author Ron, Patryk, Mitch, Tyler
+ *
+ ************************************************************************************/
 
 public class LimitedTimePerson extends Person{
 

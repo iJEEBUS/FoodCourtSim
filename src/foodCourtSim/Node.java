@@ -1,5 +1,10 @@
 package foodCourtSim;
 
+/*************************************************************************************
+ *	Creates a Node that is used in the navigation of the Linked List
+ * 
+ * @author Ron, Patryk, Mitch, Tyler
+ ************************************************************************************/
 public class Node<E> {
 	private E data;
 	private Node<E> above;

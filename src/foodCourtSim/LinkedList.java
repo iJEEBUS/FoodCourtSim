@@ -1,5 +1,11 @@
 package foodCourtSim;
 
+/*************************************************************************************
+ *	Creates a Linked List and contains methods which allow us to navigate said
+ * Linked List
+ * 
+ * @author Ron, Patryk, Mitch, Tyler
+ ************************************************************************************/
 public class LinkedList<E> {
 
 	private Node<E> top;
