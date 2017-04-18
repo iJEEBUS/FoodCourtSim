@@ -23,13 +23,13 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 
 	/** Panel for the buttons */
 	private JPanel buttonPanel;
-	
+
 	/** Panel for the data */
 	private JPanel dataPanel;
-	
+
 	/** Panel for the displayed info */
 	private JPanel displayPanel;
-	
+
 	/** Panel for the button display */
 	private JPanel buttonDisplayHolder;
 
@@ -40,7 +40,7 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 	private JLabel output_lbl, throughput_lbl, avg_time_lbl, left_line_lbl, max_q_lbl, 
 	num_special_needs_lbl, num_limited_lbl, avg_time_special_lbl, avg_time_limited_lbl,
 	avg_limited_time_lbl, avg_special_needs_lbl;
-	
+
 	/** Labels for the the dataPanel that are in the second column */
 	private JLabel output_out_lbl, throughput_out_lbl, avg_time_out_lbl, left_line_out_lbl, 
 	max_q_out_lbl, num_special_needs_out_lbl, num_limited_out_lbl, avg_time_special_out_lbl,
@@ -57,7 +57,7 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 
 	/** The amount of current ticks in the simulation */
 	private int ticks;
-	
+
 	/** Tells if the sim is running and/or complete */
 	private boolean isRunning, compleate;
 
@@ -74,11 +74,13 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		sim = new GUIsimulation(simX, simY);
 		add(sim);
 
+		// buttonDisplayHolder
 		buttonDisplayHolder = new JPanel();
 		buttonDisplayHolder.setPreferredSize(new Dimension(bpX, simY));
 		buttonDisplayHolder.setBackground(Color.GRAY);
 		add(buttonDisplayHolder);
 
+		// buttonPanel
 		buttonPanel = new JPanel();
 		buttonPanel.setPreferredSize(new Dimension(bpX-2, bpY));
 		buttonPanel.setBackground(Color.white);
@@ -86,13 +88,15 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 
 		addButtons();
 
+		// displayPanel
 		displayPanel = new JPanel();
 		displayPanel.setPreferredSize(new Dimension(bpX-2, simY - (bpY)));
 		displayPanel.setBackground(Color.white);
 		buttonDisplayHolder.add(displayPanel);
 
 		sim.display(displayPanel);
-
+		
+		// dataPanel
 		dataPanel = new JPanel();
 		dataPanel.setPreferredSize(new Dimension(simX + bpX + 5, dpY + 85));
 		dataPanel.setLayout(new GridBagLayout());
@@ -105,14 +109,16 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		setPreferredSize(new Dimension(simX + bpX + 20, 
 				simY + dpY + 100));
 
-		/* 
-		 * This command makes the method run() run forever in a separate thread. If
-		 * the variable isRunning is true then the run will execute something otherwise
-		 * it just runs in the background.
-		 */
+//		  This command makes the method run() run forever in a separate thread. If
+//		  the variable isRunning is true then the run will execute something otherwise
+//		  it just runs in the background.
+		 
 		new Thread(this).start();
 	}
 
+	/********************************************************************************
+	 * Add the buttons to the GUI
+	 *******************************************************************************/
 	private void addButtons() {
 		start = new JButton("Start");
 		start.setPreferredSize(button);
@@ -163,7 +169,9 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 	 *******************************************************************************/
 	private void addData() {
 
+		// font for the data panel
 		Font textFont = new Font("Helvetica", Font.PLAIN, 16);
+		
 		// first column
 		output_lbl = new JLabel("Output Information");
 		output_lbl.setFont(new Font("Helvetica", Font.BOLD, 17));
@@ -281,8 +289,6 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		regular_key.setFont(textFont);
 		gbc.gridy += 2;
 		dataPanel.add(regular_key, gbc);
-
-
 	}
 
 	/********************************************************************************
@@ -300,6 +306,10 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 
 	}
 
+	/********************************************************************************
+	 * Runs the entire simulation and creates a JOptionPane to inform the user
+	 * when the simulation has ended
+	 *******************************************************************************/
 	public void run() {
 		ticks = 0;
 		try{
@@ -324,6 +334,11 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		}
 	}
 
+	/********************************************************************************
+	 * Main method which runs the actual SimulatedGUI
+	 * 
+	 * @param args
+	 *******************************************************************************/
 	public static void main(String[] args) {
 		JFrame frame = new JFrame();
 		frame.setUndecorated(true);
@@ -335,10 +350,13 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		frame.setVisible(true);
 	}
 
+	/********************************************************************************
+	 * Handles the button clicks for the GUI
+	 *******************************************************************************/
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
-
+		
 		if(source == start) 
 			isRunning = true;
 
@@ -367,7 +385,6 @@ public class SimulatedGUI extends JPanel implements Runnable, ActionListener{
 		addCheckout.setEnabled(!isRunning);
 		removeCheckout.setEnabled(!isRunning);
 		editInfo.setEnabled(!isRunning);
-
 
 		sim.redisplay();
 		sim.repaint();

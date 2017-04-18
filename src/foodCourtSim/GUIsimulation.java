@@ -11,6 +11,7 @@ import javax.swing.*;
  *
  ************************************************************************************/
 public class GUIsimulation extends JPanel{
+	/** 2D array to handle the colors to be outputte on the visual aid */
 	private Color[][] foodCourt;
 
 	/** Instance of a Sim class */
@@ -28,16 +29,16 @@ public class GUIsimulation extends JPanel{
 
 	/** CheckOutQ to keep track of all the customers */
 	private CheckOutQ Q;
-	
+
 	/** Array for the customers that are in the eatery */
 	private Eatery[] eateries;
-	
+
 	/** Array for the customers that are in the checkout line */
 	private CheckOut[] checkouts;
 
 	/** Instance of a person to create more */
 	private PersonProducer produce;
-	
+
 	/** Main clock to handle all of the events with each tick */
 	private Clock clk;
 
@@ -67,7 +68,7 @@ public class GUIsimulation extends JPanel{
 
 	/** Color of the eateries are to be gray */
 	private Color eaterieColor = Color.GRAY;
-	
+
 	/** Color of the checkouts are to be gray */
 	private Color checkoutColor = Color.GRAY;
 
@@ -187,13 +188,13 @@ public class GUIsimulation extends JPanel{
 	 * Handles the layout of the JOptionPane that is created in the getInfo() method
 	 ************************************************************************************/
 	private void getInfoCreater() {
-		eatBox = new JTextField("0", 20);
-		checkBox = new JTextField("0", 20);
-		nextTimeBox = new JTextField("0", 20);
-		eatTimeBox = new JTextField("0", 20);
-		checkTimeBox = new JTextField("0", 20);
-		leaveTimeBox = new JTextField("0", 20);
-		totTimeBox = new JTextField("0", 20);
+		eatBox = new JTextField( 5);
+		checkBox = new JTextField( 5);
+		nextTimeBox = new JTextField( 5);
+		eatTimeBox = new JTextField( 5);
+		checkTimeBox = new JTextField( 5);
+		leaveTimeBox = new JTextField( 5);
+		totTimeBox = new JTextField(5);
 
 		infoPanel = new JPanel(new GridBagLayout());
 
@@ -245,7 +246,7 @@ public class GUIsimulation extends JPanel{
 		gbc.gridy = 6;
 		infoPanel.add(checkBox, gbc);
 
-		infoPanel.setPreferredSize(new Dimension(250,300));
+		infoPanel.setPreferredSize(new Dimension(300,350));
 	}
 
 	/*************************************************************************************
@@ -611,6 +612,7 @@ public class GUIsimulation extends JPanel{
 		return in_line;
 	}
 
+
 	/********************************************************************************
 	 * Returns the average time for a person to complete their visit and checkout
 	 * 
@@ -684,19 +686,21 @@ public class GUIsimulation extends JPanel{
 	 *******************************************************************************/
 	int special_people = 0;
 	int special_needs_time = 0;
+	int avg_timeS = 0;
+
+
 	public int getAvgTimeSpecial() {
-		int avg_time = 0;
 
 		if (checkouts.length > 0) {
 			for (int i = 0; i < checkouts.length; i++) {
 				if(checkouts[i].getColoratCheckout().equals(Color.green)) {
-					avg_time += checkouts[i].getTotalTime();
-					this.special_people++;
+					avg_timeS += checkouts[i].getTotalTime();
+					special_people++;
 				}
 			}
 		}
 		if (special_people > 0) 
-			special_needs_time = (avg_time / special_people);
+			special_needs_time = (avg_timeS / special_people);
 		return special_needs_time;
 	}
 
@@ -708,19 +712,20 @@ public class GUIsimulation extends JPanel{
 	 *******************************************************************************/
 	int limited_people = 0;
 	int limited_time = 0;
+	int avg_timeL = 0;
+
 	public int getAvgTimeLimited() {
-		int avg_time = 0;
 
 		if (checkouts.length > 0) {
 			for (int i = 0; i < checkouts.length; i++) {
 				if(checkouts[i].getColoratCheckout().equals(Color.blue)) {
-					avg_time += checkouts[i].getTotalTime();
-					this.limited_people++;
+					avg_timeL += checkouts[i].getTotalTime();
+					limited_people++;
 				}
 			}
 		}
 		if (limited_people > 0)
-			limited_time = (avg_time / limited_people);
-		return this.limited_time;
+			limited_time = (avg_timeL / limited_people);
+		return limited_time;
 	}
 }

@@ -29,10 +29,10 @@ public class Eatery implements ClockListener {
 
 	/** How many people left the line */
 	private int leftLine = 0;
-	
+
 	/** How many of those being served are special needs */
 	private int special_needs = 0;
-	
+
 	/** How many people being served are limited on time */
 	private int limited_time = 0;
 
@@ -81,14 +81,15 @@ public class Eatery implements ClockListener {
 			// if there is a person in line
 			// then add that person to the check out line
 			if (person != null) { 	
-				
+
 				if (person.getColor().equals(Color.blue)) {
 					limited_time++;
 				}
-				
+
 				if (person.getColor().equals(Color.green)) {
 					special_needs++;
 				}
+
 				// add the person to the checkout line
 				checkOut.add(person);    
 
@@ -99,8 +100,6 @@ public class Eatery implements ClockListener {
 			// if the line has 1+ people in it then execute this
 			if (Q.size() >= 1) {
 
-				
-				
 				// remove the person from the line
 				// but do not send them on yet
 				person = Q.removeIndex(0);
@@ -175,7 +174,7 @@ public class Eatery implements ClockListener {
 	public int getNumSpecial() {
 		return special_needs;
 	}
-	
+
 	/********************************************************************************
 	 * Gets the number of limited time customers go through the entire visit
 	 * 
@@ -184,7 +183,7 @@ public class Eatery implements ClockListener {
 	public int getNumLimited() {
 		return limited_time;
 	}
-	
+
 	/********************************************************************************
 	 * Returns the color of the person at a specified index
 	 * 

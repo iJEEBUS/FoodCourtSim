@@ -14,31 +14,31 @@ public class CheckOut implements ClockListener {
 
 	/** Time until next person arrives */
 	private int timeOfNextEvent = 0;
-	
+
 	/** The person at the checkout */
 	private Person person;   
-	
+
 	/** The amount of full trips completed by customers */
 	private int completed = 0;
-	
+
 	/** The total time of the simulation */
 	private int totalTime = 0;
-	
+
 	/** The number of people in the simulation */
 	private int numPeople = 0;
-	
+
 	/** CheckOutQ to hold customers at the checkout */
 	private CheckOutQ Q;
-	
+
 	/** How many customers left the line */
 	private int leftLine = 0;
-	
+
 	/** Color of the person */
 	private Color C;
-	
+
 	/** Max length achieved by a line */
 	private int max_length = 0;
-	
+
 	/********************************************************************************
 	 * Constructor for the CheckOut class
 	 * @param q the queue for the checkout line
@@ -57,7 +57,7 @@ public class CheckOut implements ClockListener {
 	public void event (int tick){
 		if (tick >= timeOfNextEvent) {
 			C = Color.white;
-			
+
 			// if the queue is populated AND the tick time is >= the persons leave
 			// time then remove them from the line and increment leftLine by one
 			if((Q.size() != 0) && (Q.get(0).getTickTime() >= Q.get(0).getLeaveTime())) {
@@ -69,15 +69,7 @@ public class CheckOut implements ClockListener {
 			if (Q.size() >= 1) {
 				// variable for the current person
 				person = Q.remove(0);		// do not send this person as of yet, make them wait. 
-				
-				C = person.getColor();
-				
-				if (C.equals(Color.green)) {
-				}
-				
-				if (C.equals(Color.blue)) {
-				}
-				
+
 				// the time that the next event should occur
 				timeOfNextEvent = tick + (int) (person.getCheckOutTime() + 1);
 
@@ -89,7 +81,7 @@ public class CheckOut implements ClockListener {
 
 				// the number of people who completed the line
 				completed++;
-				
+
 				// the max length achieved by the line
 				max_length = Q.maxQ();
 			}	
@@ -131,7 +123,7 @@ public class CheckOut implements ClockListener {
 	public int getLeftLine() {
 		return leftLine;
 	}
-	
+
 	/********************************************************************************
 	 * Returns the max length of the checkout queues
 	 * 
@@ -140,7 +132,7 @@ public class CheckOut implements ClockListener {
 	public int getMaxLength() {
 		return max_length;
 	}
-	
+
 	/********************************************************************************
 	 * Get the total amount of time it took a person to complete their visit
 	 * 
@@ -149,7 +141,7 @@ public class CheckOut implements ClockListener {
 	public int getTotalTime() {
 		return totalTime;
 	}
-	
+
 	/********************************************************************************
 	 * Returns the color of the person at checkout
 	 * @return Color color of person checking out

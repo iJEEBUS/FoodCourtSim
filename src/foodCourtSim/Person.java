@@ -11,10 +11,18 @@ import java.awt.Color;
  * @author Ron, Patryk, Mitch, Tyler
  ************************************************************************************/
 public class Person {
-	private int tickTime;  // master clock time
-	protected double eateryTime;  // time it takes to order food at eatery
+	/** Master tick time for the simulation */
+	private int tickTime;  
+	/** Time it takes to order food at an eatery */
+	protected double eateryTime;  
+
+	/** The average time to checkout */
 	protected double checkOutTime;
+
+	/** The average time for a customer to leave */
 	protected double leaveTime;
+
+	/** The color of the customer */
 	protected Color color;
 
 	/*************************************************************************************
@@ -33,7 +41,7 @@ public class Person {
 		this.leaveTime = leaveTime + tickTime;
 		this.color = color;
 	}
-	
+
 	/*************************************************************************************
 	 * Gets the color of the customer
 	 * @return Color the color of the person
@@ -50,7 +58,7 @@ public class Person {
 	public double getCheckOutTime() {
 		return checkOutTime;
 	}
-	
+
 	/*************************************************************************************
 	 * Gets the leave time for the customer
 	 * 
@@ -68,7 +76,7 @@ public class Person {
 	public double getEateryTime() {
 		return eateryTime;
 	}
-	
+
 	/*************************************************************************************
 	 * Gets the current tick time
 	 * 
@@ -104,7 +112,7 @@ public class Person {
 	public void setTickTime(int tickTime) {
 		this.tickTime = tickTime;
 	}
-	
+
 	/*************************************************************************************
 	 * Set the final time for the simulation
 	 * @param tickTime current tick time
@@ -121,7 +129,7 @@ public class Person {
 	public void setEateryTime(double time) {
 		this.eateryTime = time;
 	}
-	
+
 	/*************************************************************************************
 	 * Set the amount of time that must pass for a person to leave the line
 	 * 

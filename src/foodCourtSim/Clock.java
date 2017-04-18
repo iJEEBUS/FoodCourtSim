@@ -17,6 +17,7 @@ public class Clock {
 	/** The maximum number of objects that can be placed in the ClockListener[] */
 	private int MAX = 100;
 
+	/** The current time in the simulation */
 	private int currentTime;
 
 	/********************************************************************************
@@ -45,12 +46,15 @@ public class Clock {
 				// call the event method for the object
 				myListeners[j].event(currentTime);
 
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {}
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {}
 		}
 	}
 
+	/********************************************************************************
+	 * Calls the .event() method on all of the object that implement ClockListener
+	 *******************************************************************************/
 	public void oneTick() {
 		// while j is less than the amount of objects in the array
 		for (int j = 0; j < numListeners; j++)
@@ -108,5 +112,4 @@ public class Clock {
 	public int getMAX() {
 		return MAX;
 	}
-
 }
